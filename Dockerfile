@@ -7,10 +7,10 @@ LABEL description="Consumet API (fastify) Docker Image"
 RUN apt-get update && apt-get upgrade -y && apt-get autoclean -y && apt-get autoremove -y
 
 # set a non privileged user to use when running this image
-RUN groupadd -r nodejs && useradd -g nodejs -s /bin/bash -d /home/nodejs -m nodejs
-USER nodejs
+# RUN groupadd -r nodejs && useradd -g nodejs -s /bin/bash -d /home/nodejs -m nodejs
+# USER nodejs
 # set right (secure) folder permissions
-RUN mkdir -p /home/nodejs/app/node_modules && chown -R nodejs:nodejs /home/nodejs/app
+# RUN mkdir -p /home/nodejs/app/node_modules && chown -R nodejs:nodejs /home/nodejs/app
 
 WORKDIR /home/nodejs/app
 
@@ -29,13 +29,15 @@ ENV REDIS_PASSWORD=${REDIS_PASSWORD}
 ENV NPM_CONFIG_LOGLEVEL=warn
 
 # copy project definition/dependencies files, for better reuse of layers
-COPY --chown=nodejs:nodejs package*.json ./
+# COPY --chown=nodejs:nodejs package*.json ./
+COPY package*.json ./
 
 # install dependencies here, for better reuse of layers
 RUN npm install && npm update && npm cache clean --force
 
 # copy all sources in the container (exclusions in .dockerignore file)
-COPY --chown=nodejs:nodejs . .
+# COPY --chown=nodejs:nodejs . .
+COPY . .
 
 # build/pack binaries from sources
 
